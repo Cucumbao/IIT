@@ -11,13 +11,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      # ПУНКТ 4: Лінтер (Hadolint)
       - name: Lint Dockerfile
         uses: hadolint/hadolint-action@v3.1.0
         with:
           dockerfile: Dockerfile
 
-      # ПУНКТ 3: Збірка та завантаження в Docker Hub
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
