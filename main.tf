@@ -43,8 +43,10 @@ resource "aws_instance" "web_server" {
   key_name               = "iit_lab4"              
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
-  user_data = <<-EOF
+ user_data = <<-EOF
               #!/bin/bash
+              sleep 60
+              
               apt-get update -y
               apt-get install -y docker.io
               systemctl start docker
