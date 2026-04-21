@@ -3,11 +3,10 @@ name: CI/CD Pipeline (Docker + Terraform)
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
-  # ==========================================
-  # ЧАСТИНА 1: Збірка Docker (З минулої ЛР)
-  # ==========================================
   test-and-build:
     runs-on: ubuntu-latest
     steps:
@@ -32,15 +31,11 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/lab04_teampt:latest
 
-  # ==========================================
-  # ЧАСТИНА 2: Інфраструктура (Лабораторна 6)
-  # ==========================================
   terraform:
     name: 'Terraform Plan & Apply'
-    needs: test-and-build # Цей рядок каже: "Почекай, поки виконається test-and-build"
+    needs: test-and-build
     runs-on: ubuntu-latest
     
-    # Секрети для AWS
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -53,11 +48,19 @@ jobs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
+    - name: Terraform Format
+      run: terraform fmt -check
+      continue-on-error: true
+
     - name: Terraform Init
       run: terraform init
 
+    - name: Terraform Validate
+      run: terraform validate -no-color
+
     - name: Terraform Plan
-      run: terraform plan -out=tfplan
+      run: terraform plan -out=tfplan -no-color
 
     - name: Terraform Apply
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       run: terraform apply -auto-approve tfplan

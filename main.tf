@@ -5,6 +5,11 @@ terraform {
       version = "~> 5.0"
     }
   }
+backend "s3" {
+    bucket = "tvij-stvorenyj-baket" # Заміни на свою назву бакета
+    key    = "lab6/terraform.tfstate"
+    region = "eu-north-1"
+  }
 }
 
 provider "aws" {
