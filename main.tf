@@ -6,7 +6,7 @@ terraform {
     }
   }
 backend "s3" {
-    bucket = "tvij-stvorenyj-baket" # Заміни на свою назву бакета
+    bucket = "lab6-tf-state-2026" # Заміни на свою назву бакета
     key    = "lab6/terraform.tfstate"
     region = "eu-north-1"
   }
