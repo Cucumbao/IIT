@@ -48,20 +48,17 @@ resource "aws_instance" "web_server" {
   key_name               = "iit_lab4"              
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
- user_data = <<-EOF
+user_data = <<-EOF
               #!/bin/bash
-              sleep 60
-              
-              apt-get update -y
-              apt-get install -y docker.io
+              yum update -y
+              yum install -y docker
               systemctl start docker
               systemctl enable docker
-              usermod -aG docker ubuntu
+              usermod -aG docker ec2-user
               
               docker run -d --name watchtower -v /var/run/docker.sock:/var/run/docker.sock containrrr/watchtower --interval 30
               docker run -d --name lr5 -p 80:80 syzonenkoa/lab04_teampt:latest
               EOF
-
   tags = {
     Name        = "Lab-Terraform-Instance"
     Environment = "Education"
