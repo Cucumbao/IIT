@@ -5,7 +5,7 @@ terraform {
       version = "~> 5.0"
     }
   }
-backend "s3" {
+  backend "s3" {
     bucket = "lab6-tf-state-2026"
     key    = "lab6/terraform.tfstate"
     region = "eu-north-1"
@@ -13,7 +13,7 @@ backend "s3" {
 }
 
 provider "aws" {
-  region = "eu-north-1" 
+  region = "eu-north-1"
 }
 
 resource "aws_security_group" "web_sg" {
@@ -43,12 +43,12 @@ resource "aws_security_group" "web_sg" {
 }
 
 resource "aws_instance" "web_server" {
-  ami                    = "ami-052387465d846f3fc" 
-  instance_type          = "t3.micro" 
-  key_name               = "iit_lab4"              
+  ami                    = "ami-052387465d846f3fc"
+  instance_type          = "t3.micro"
+  key_name               = "iit_lab4"
   vpc_security_group_ids = [aws_security_group.web_sg.id]
 
-user_data = <<-EOF
+  user_data = <<-EOF
               #!/bin/bash
               yum update -y
               yum install -y docker
